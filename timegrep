@@ -363,7 +363,10 @@ debug_msg("Beg: {0} Mid: {1} End: {2} P1: {3} P2: {4} Timestamp: '{5}'".format(b
 #     beyond the end of the range we want
 
 while linedate <= searchend:
-    print line
+    try:
+      print line
+    except IOError:
+      exit(0)
     linedate, line = getdata(date_format)
 
 debug_msg("Start: '{0}' End: '{1}'".format(searchstart, searchend),0)
