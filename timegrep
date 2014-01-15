@@ -182,6 +182,10 @@ parser.add_option("-d", "--date", action = "store", dest = "date",
                 default = "",
                 help = "Use the supplied date instead of today in the form YYYY-mm-dd")
 
+parser.add_option("-e", "--end-date", action = "store", dest = "end_date",
+                default = "",
+                help = "Use the supplied date instead of date in the form YYYY-mm-dd for end date")
+
 parser.add_option("", "--start-time", action = "store", dest = "start_time",
                 default = "",
                 help = "Display lines from start time in the form hh:mm[:ss]")
@@ -217,6 +221,11 @@ if options.date:
 else:
     selecteddate = now.strftime("%Y-%m-%d")
 
+if options.end_date:
+    enddate = options.end_date
+else:
+    enddate = None
+
 if not options.start_time and not options.end_time:
     parser.error("you need to specify at least a start time or an end time")
 
@@ -249,9 +258,10 @@ previousday = date.fromordinal(datetime.strptime(selecteddate, "%Y-%m-%d").toord
 selectedday = datetime.strptime(selecteddate, "%Y-%m-%d").strftime("%Y-%m-%d")
 
 searchdate = datetime.strptime(selecteddate, "%Y-%m-%d").strftime("%Y%m%d")
+enddate = datetime.strptime((enddate or selecteddate), "%Y-%m-%d").strftime("%Y%m%d")
 
 searchstart = searchdate + " " + start_time
-searchend = searchdate + " " + end_time
+searchend = enddate + " " + end_time
 
 if searchend < searchstart:
     print >> sys.stderr, "[ERROR] End time should be superior to start time"
